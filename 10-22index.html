@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        #cardsHere{
+            display:flex;
+            flex-wrap: wrap;
+        }
+    </style>
+    <script src="10-22script.js" type="text/javascript" defer>
+
+    </script>
+    <title>AJAX/REST/JSON</title>
+</head>
+<body>
+    <div id="demo">
+        <h1>BlackJack</h1>
+        <div id="cardsHere">
+            <img id="cardIMG" src="" alt="a card here">
+            <img id="card2" src="" alt="a card here">
+        </div>
+        <div>
+            <button onclick="drawCard(deckID)">DRAW</button>
+            <button onclick="myRequest.onreadystatechange()">NEW DECK</button>
+        </div>
+        <h2 id="playerScore">Score : 0</h2>
+        <h1 id="loseHere"></h1>
+
+    </div>
+
+</body>
+</html>
