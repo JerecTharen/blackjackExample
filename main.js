@@ -26,12 +26,32 @@
 // httpRequest.open('GET','https://pokeapi.co/api/v2/pokemon/');
 // httpRequest.send();
 
+//226 x 314 pixel card back needed
+
+class Deck{
+    constructor(deckID,pOneCards,pTwoCards,pOneScore,pTwoScore){
+        this.deckID = deckID;
+        this.pOneCards = pOneCards;
+        this.pOneScore = pOneScore;
+        this.pTwoCards = pTwoCards;
+        this.pTwoScore = pTwoScore;
+    }
+}
+
+class Card{
+    constructor(value,face){
+        this.value = value;
+        this.face = face;
+    }
+}
+
 
 let deckID;
 let allCards;
 let first = false;
 let cardsHere = document.getElementById('cardsHere');
 let currentScore = 0;
+let currentPlayer = 0;
 
 function loseCheck(aScore){
     if (aScore > 21){
@@ -126,36 +146,44 @@ function initialDrawCard(deckID){
         if (myRequestThree.readyState == myRequestThree.DONE){
             let myResponse = JSON.parse(myRequestThree.response);
             if (myResponse.success){
-                var card = myResponse.cards[0].code;
-                var cIMG = myResponse.cards[0].image;
-                var cardTwo = myResponse.cards[1].code;
-                var cIMGTwo = myResponse.cards[1].image;
+                // var thecards = myResponse.cards;
+                // var card = myResponse.cards[0].code;
+                theDeck.pOneCards.push(new Card(thecards[0].code,thecards[0].image));
+                // var cIMG = myResponse.cards[0].image;
+                // var cardTwo = myResponse.cards[1].code;
+                // var cIMGTwo = myResponse.cards[1].image;
+                theDeck.pOneCards.push(new Card(thecards[1].code,thecards[1].image));
+                theDeck.pTwoCards.push(new Card(thecards[2].code,thecards[2].image));
+                theDeck.pTwoCards.push(new Card(thecards[3].code,thecards[3].image));
                 if (first === false){
-                    document.getElementById('cardIMG').setAttribute('src',cIMG);
-                    document.getElementById('card2').setAttribute('src',cIMGTwo);
-                    allCards = cardsHere.innerHTML;
+                    document.getElementById('cardIMG').setAttribute('src','./back.png');
+                    document.getElementById('card2').setAttribute('src','./back.png');
+                    // allCards = cardsHere.innerHTML;
                     first = true;
                 }
                 else{
-                    allCards += `<img src="${cIMG}" alt="a card">`;
-                    allCards += `<img src="${cIMGTwo}" alt="a card">`;
-                    cardsHere.innerHTML = allCards;
+                    allCards += `<img src="./back.png" alt="a card">`;
+                    allCards += `<img src="./back.png" alt="a card">`;
+                    // cardsHere.innerHTML = allCards;
                 }
             }
 
             console.log(myResponse);
             console.log(card);
             console.log(cardTwo);
-            let myScore = addScore(card,cardTwo);
-            currentScore += myScore;
-            let ifLost = "";
-            ifLost = loseCheck(currentScore);
-            document.getElementById('playerScore').innerHTML = `Score: ${currentScore}`;
-            document.getElementById('loseHere').innerHTML = ifLost;
+
+            theDeck.pOneScore= addScore(theDeck.pOneCards[0].value,theDeck.pOneCards[1].value);
+            theDeck.pTwoScore= addScore(theDeck.pTwoCards[0].value,theDeck.pTwoCards[1].value);
+            // let myScore = addScore(card,cardTwo);
+            // currentScore += myScore;
+            // let ifLost = "";
+            // ifLost = loseCheck(currentScore);
+            // document.getElementById('playerScore').innerHTML = `Score: ${currentScore}`;
+            // document.getElementById('loseHere').innerHTML = ifLost;
 
         }
     };
-    myRequestThree.open('GET',`https://deckofcardsapi.com/api/deck/${deckID}/draw/?count=2`);
+    myRequestThree.open('GET',`https://deckofcardsapi.com/api/deck/${deckID}/draw/?count=4`);
     myRequestThree.send();
 }
 
@@ -171,11 +199,12 @@ myRequest.onreadystatechange = function() {
     if (myRequest.readyState == myRequest.DONE){
         let response = JSON.parse(myRequest.response);
         if (response.success){
-            deckID = response.deck_id;
+            theDeck = new Deck(response.deck_id,[],[],0,0);
+            // theDeck.deckID = response.deck_id;
             }
             console.log(response);
-            console.log(deckID);
-            initialDrawCard(deckID);
+            console.log(theDeck.deckID);
+            initialDrawCard(theDeck.deckID);
             }
     };
 myRequest.open('GET','https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1');
