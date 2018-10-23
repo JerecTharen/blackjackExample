@@ -49,7 +49,8 @@ class Card{
 let deckID;
 let allCards;
 let first = false;
-let cardsHere = document.getElementById('cardsHere');
+let pOneCardsHere = document.getElementById('pOneCardsHere');
+let pTwoCardsHere = document.getElementById('pTwoCardsHere');
 let currentScore = 0;
 let currentPlayer = 0;
 
@@ -112,33 +113,133 @@ function addScore(one,two){
     return score;
 }
 
-function drawCard(deckID){
+function drawCardPOne(deckID){
     let myRequestTwo = new XMLHttpRequest();
     myRequestTwo.onreadystatechange = function() {
         if (myRequestTwo.readyState == myRequestTwo.DONE){
             let myResponse = JSON.parse(myRequestTwo.response);
             if (myResponse.success){
-                var card = myResponse.cards[0].code;
-                var cIMG = myResponse.cards[0].image;
+                // var card = myResponse.cards[0].code;
+                // var cIMG = myResponse.cards[0].image;
+                theDeck.pOneCards.push(new Card(myResponse.cards[0].code,myResponse.cards[0].image));
 
-                allCards += `<img src="${cIMG}" alt="a card">`;
-                cardsHere.innerHTML = allCards;
+                let someCards = '';
+                for (let i = 0;i < theDeck.pOneCards.length;i++){
+                    someCards += `<img src="./back.png" alt="a card here">`
+                }
+                pOneCardsHere.innerHTML = someCards;
+
+                theDeck.pOneScore= theDeck.pOneScore + addScore(theDeck.pOneCards[0].value);
+                // allCards += `<img src="${cIMG}" alt="a card">`;
+                // cardsHere.innerHTML = allCards;
 
             }
 
-            console.log(myResponse);
-            console.log(card);
-            let myScore = addScore(card);
-            currentScore += myScore;
-            let ifLost = "";
-            ifLost = loseCheck(currentScore);
-            document.getElementById('playerScore').innerHTML = `Score: ${currentScore}`;
-            document.getElementById('loseHere').innerHTML = ifLost;
+            // console.log(myResponse);
+            // console.log(card);
+            // let myScore = addScore(card);
+            // currentScore += myScore;
+            // let ifLost = "";
+            // ifLost = loseCheck(currentScore);
+            // document.getElementById('playerScore').innerHTML = `Score: ${currentScore}`;
+            // document.getElementById('loseHere').innerHTML = ifLost;
         }
     };
     myRequestTwo.open('GET',`https://deckofcardsapi.com/api/deck/${deckID}/draw/?count=1`);
     myRequestTwo.send();
 }
+
+function showPOneCards(){
+    let pOneCards = '';
+    for (let i = 0;i < theDeck.pOneCards.length;i++){
+        pOneCards += `<img src="${theDeck.pOneCards[i].face}" alt="a card here">`;
+    }
+    pOneCardsHere.innerHTML = pOneCards;
+    document.getElementById('playerOneScore').style.display = 'block';
+    document.getElementById('playerOneScore').innerHTML = `Score: ${theDeck.pOneScore}`;
+}
+function hideCards(){
+    let allFaces = document.getElementsByTagName('img');
+    for (let i = 0; i < allFaces.length; i++){
+        allFaces[i].setAttribute('src','./back.png');
+    }
+    document.getElementById('playerOneScore').style.display = 'none';
+    document.getElementById('playerTwoScore').style.display = 'none';
+}
+
+function drawCardPTwo(deckID){
+    let myRequestTwo = new XMLHttpRequest();
+    myRequestTwo.onreadystatechange = function() {
+        if (myRequestTwo.readyState == myRequestTwo.DONE){
+            let myResponse = JSON.parse(myRequestTwo.response);
+            if (myResponse.success){
+                // var card = myResponse.cards[0].code;
+                // var cIMG = myResponse.cards[0].image;
+                theDeck.pTwoCards.push(new Card(myResponse.cards[0].code,myResponse.cards[0].image));
+
+                let someCards = '';
+                for (let i = 0;i < theDeck.pTwoCards.length;i++){
+                    someCards += `<img src="./back.png" alt="a card here">`
+                }
+                pTwoCardsHere.innerHTML = someCards;
+
+                theDeck.pTwoScore= theDeck.pTwoScore + addScore(theDeck.pTwoCards[0].value);
+                // allCards += `<img src="${cIMG}" alt="a card">`;
+                // cardsHere.innerHTML = allCards;
+
+            }
+
+            // console.log(myResponse);
+            // console.log(card);
+            // let myScore = addScore(card);
+            // currentScore += myScore;
+            // let ifLost = "";
+            // ifLost = loseCheck(currentScore);
+            // document.getElementById('playerScore').innerHTML = `Score: ${currentScore}`;
+            // document.getElementById('loseHere').innerHTML = ifLost;
+        }
+    };
+    myRequestTwo.open('GET',`https://deckofcardsapi.com/api/deck/${deckID}/draw/?count=1`);
+    myRequestTwo.send();
+}
+
+function showPTwoCards(){
+    let pTwoCards = '';
+    for (let i = 0;i < theDeck.pTwoCards.length;i++){
+        pTwoCards += `<img src="${theDeck.pTwoCards[i].face}" alt="a card here">`;
+    }
+    pTwoCardsHere.innerHTML = pTwoCards;
+    document.getElementById('playerTwoScore').style.display = 'block';
+    document.getElementById('playerTwoScore').innerHTML = `Score: ${theDeck.pTwoScore}`;
+}
+
+// function drawCardPTwo(deckID){
+//     let myRequestTwo = new XMLHttpRequest();
+//     myRequestTwo.onreadystatechange = function() {
+//         if (myRequestTwo.readyState == myRequestTwo.DONE){
+//             let myResponse = JSON.parse(myRequestTwo.response);
+//             if (myResponse.success){
+//                 var card = myResponse.cards[0].code;
+//                 var cIMG = myResponse.cards[0].image;
+//
+//                 allCards += `<img src="${cIMG}" alt="a card">`;
+//                 cardsHere.innerHTML = allCards;
+//
+//             }
+//
+//             console.log(myResponse);
+//             console.log(card);
+//             let myScore = addScore(card);
+//             currentScore += myScore;
+//             let ifLost = "";
+//             ifLost = loseCheck(currentScore);
+//             document.getElementById('playerScore').innerHTML = `Score: ${currentScore}`;
+//             document.getElementById('loseHere').innerHTML = ifLost;
+//         }
+//     };
+//     myRequestTwo.open('GET',`https://deckofcardsapi.com/api/deck/${deckID}/draw/?count=1`);
+//     myRequestTwo.send();
+// }
 
 function initialDrawCard(deckID){
     let myRequestThree = new XMLHttpRequest();
@@ -146,7 +247,7 @@ function initialDrawCard(deckID){
         if (myRequestThree.readyState == myRequestThree.DONE){
             let myResponse = JSON.parse(myRequestThree.response);
             if (myResponse.success){
-                // var thecards = myResponse.cards;
+                 var thecards = myResponse.cards;
                 // var card = myResponse.cards[0].code;
                 theDeck.pOneCards.push(new Card(thecards[0].code,thecards[0].image));
                 // var cIMG = myResponse.cards[0].image;
@@ -158,19 +259,22 @@ function initialDrawCard(deckID){
                 if (first === false){
                     document.getElementById('cardIMG').setAttribute('src','./back.png');
                     document.getElementById('card2').setAttribute('src','./back.png');
+                    document.getElementById('p2cardIMG').setAttribute('src','./back.png');
+                    document.getElementById('p2card2').setAttribute('src','./back.png');
                     // allCards = cardsHere.innerHTML;
                     first = true;
                 }
                 else{
-                    allCards += `<img src="./back.png" alt="a card">`;
-                    allCards += `<img src="./back.png" alt="a card">`;
+                    pOneCardsHere.innerHTML = '<img src="./back.png" alt="a card here"><img src="./back.png" alt="a card here">';
+                    pTwoCardsHere.innerHTML = '<img src="./back.png" alt="a card here"><img src="./back.png" alt="a card here">';
+
                     // cardsHere.innerHTML = allCards;
                 }
             }
 
-            console.log(myResponse);
-            console.log(card);
-            console.log(cardTwo);
+            // console.log(myResponse);
+            // console.log(card);
+            // console.log(cardTwo);
 
             theDeck.pOneScore= addScore(theDeck.pOneCards[0].value,theDeck.pOneCards[1].value);
             theDeck.pTwoScore= addScore(theDeck.pTwoCards[0].value,theDeck.pTwoCards[1].value);
@@ -189,25 +293,60 @@ function initialDrawCard(deckID){
 
 let myRequest = new XMLHttpRequest();
 myRequest.onreadystatechange = function() {
-    if (first === true){
-        currentScore -= currentScore;
-        allCards = "";
-        cardsHere.innerHTML = allCards;
-    }
+    // if (first === true){
+    //     currentScore -= currentScore;
+    //     allCards = "";
+    //     pOneCardsHere.innerHTML = allCards;
+    //     pTwoCardsHere.innerHTML = allCards;
+    // }
 
     // first = false;
     if (myRequest.readyState == myRequest.DONE){
         let response = JSON.parse(myRequest.response);
         if (response.success){
-            theDeck = new Deck(response.deck_id,[],[],0,0);
+            console.log(response);
+            theDeck = undefined;
+            let newDeck = new Deck(response.deck_id,[],[],0,0);
+            theDeck = newDeck;
             // theDeck.deckID = response.deck_id;
             }
             console.log(response);
             console.log(theDeck.deckID);
             initialDrawCard(theDeck.deckID);
+            hideCards();
             }
     };
 myRequest.open('GET','https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1');
 myRequest.send();
+
+function newDeck(){
+    let myRequest = new XMLHttpRequest();
+    myRequest.onreadystatechange = function() {
+        // if (first === true){
+        //     currentScore -= currentScore;
+        //     allCards = "";
+        //     pOneCardsHere.innerHTML = allCards;
+        //     pTwoCardsHere.innerHTML = allCards;
+        // }
+
+        // first = false;
+        if (myRequest.readyState == myRequest.DONE){
+            let response = JSON.parse(myRequest.response);
+            if (response.success){
+                console.log(response);
+                theDeck = undefined;
+                let newDeck = new Deck(response.deck_id,[],[],0,0);
+                theDeck = newDeck;
+                // theDeck.deckID = response.deck_id;
+            }
+            console.log(response);
+            console.log(theDeck.deckID);
+            initialDrawCard(theDeck.deckID);
+            hideCards();
+        }
+    };
+    myRequest.open('GET','https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1');
+    myRequest.send();
+}
 
 
